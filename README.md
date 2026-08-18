@@ -12,6 +12,8 @@ A backend payment service built with Spring Boot 4.1, Spring Data JPA, PostgreSQ
 - **Bean Validation** — request validation
 - **JUnit 5 + Mockito** — unit testing
 - **Docker & Docker Compose** — containerization
+- **Flyway** — versioned database migrations
+- **Testcontainers** — isolated integration testing with a real, throwaway Postgres instance
 
 ## Features
 
@@ -22,6 +24,7 @@ A backend payment service built with Spring Boot 4.1, Spring Data JPA, PostgreSQ
 - Global exception handling with clean, structured error responses (validation errors, not-found, malformed requests)
 - API key authentication via a custom Spring Security filter
 - Automated schema management via Hibernate (`ddl-auto=update`)
+- **Transaction audit log** — every payment status change is recorded immutably (creation, refund, etc.), linked via a one-to-many relationship
 
 ## Running Locally (without Docker)
 
@@ -86,10 +89,14 @@ Key properties in `application.properties`:
 | Property | Purpose |
 |---|---|
 | `spring.datasource.url/username/password` | Postgres connection |
-| `spring.jpa.hibernate.ddl-auto` | Schema auto-generation (dev only — not production-safe) |
+| `spring.jpa.hibernate.ddl-auto` | Set to `validate` — schema is managed by Flyway, this just verifies entities match |
 | `payflow.security.api-key` | API key required on all requests |
 
 ## Notes
 
 - `ddl-auto=update` is used for learning convenience; a production system would use Flyway or Liquibase migrations instead.
 - The API key is a simple shared-secret scheme suitable for learning; a production system would likely use JWT or OAuth2.
+
+## Database Migrations
+
+Schema changes are managed with Flyway. Migration files live in `src/main/resources/db/migration`, named `V<number>__description.sql` (e.g. `V2__create_transaction_logs_table.sql`). Flyway applies any pending migrations automatically on application startup.

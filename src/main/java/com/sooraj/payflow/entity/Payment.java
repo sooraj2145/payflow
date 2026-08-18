@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="payments")
@@ -29,6 +31,14 @@ public class Payment {
     public String getIdempotencyKey() {
         return idempotencyKey;
     }
+
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL)
+    private List<TransactionLog> logs = new ArrayList<>();
+
+    public List<TransactionLog> getLogs() {
+        return logs;
+    }
+
 
     public void setIdempotencyKey(String idempotencyKey) {
         this.idempotencyKey = idempotencyKey;
