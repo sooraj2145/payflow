@@ -4,6 +4,7 @@ import com.sooraj.payflow.dto.PaymentRequest;
 import com.sooraj.payflow.entity.Payment;
 import com.sooraj.payflow.entity.PaymentStatus;
 import com.sooraj.payflow.repository.PaymentRepository;
+import com.sooraj.payflow.repository.TransactionLogRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,6 +22,9 @@ class PaymentServiceTest {
 
     @Mock
     private PaymentRepository paymentRepository;
+
+    @Mock
+    private TransactionLogRepository transactionLogRepository;
 
     @InjectMocks
     private PaymentService paymentService;
