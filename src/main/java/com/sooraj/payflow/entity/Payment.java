@@ -23,6 +23,17 @@ public class Payment {
 
     private LocalDateTime createdAt;
 
+    @Column(unique = true)
+    private String idempotencyKey;
+
+    public String getIdempotencyKey() {
+        return idempotencyKey;
+    }
+
+    public void setIdempotencyKey(String idempotencyKey) {
+        this.idempotencyKey = idempotencyKey;
+    }
+
     public Payment() {}
 
     public Payment(Long id, BigDecimal amount, String currency, PaymentStatus status, LocalDateTime createdAt) {

@@ -8,5 +8,10 @@ import java.math.BigDecimal;
 public record PaymentRequest(
         @Positive(message = "Amount must be greater than zero")
         BigDecimal amount,
+
         @NotBlank(message = "Currency is required")
-        String currency) {}
+        String currency,
+
+        @NotBlank(message = "Idempotency key is required")
+        String idempotencyKey
+        ) {}

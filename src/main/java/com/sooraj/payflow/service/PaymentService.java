@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class PaymentService {
@@ -21,11 +22,18 @@ public class PaymentService {
     }
 
     public Payment createPayment(PaymentRequest request) {
+        Optional<Payment> existing = paymentRepository.findByIdempotencyKey(request.idempotencyKey());
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+
         Payment payment = new Payment();
         payment.setAmount(request.amount());
         payment.setCurrency(request.currency());
         payment.setStatus(PaymentStatus.PENDING);
         payment.setCreatedAt(LocalDateTime.now());
+        payment.setIdempotencyKey(request.idempotencyKey());
+
         return paymentRepository.save(payment);
     }
 
